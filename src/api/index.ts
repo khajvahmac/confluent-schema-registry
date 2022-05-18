@@ -7,7 +7,7 @@ import { DEFAULT_API_CLIENT_ID } from '../constants'
 import errorMiddleware from './middleware/errorMiddleware'
 import confluentEncoder from './middleware/confluentEncoderMiddleware'
 import userAgentMiddleware from './middleware/userAgent'
-import additionalHeaderMiddleware from 'api/middleware/additionalHeader'
+import additionalHeaderMiddleware from './middleware/additionalHeader'
 
 const DEFAULT_RETRY = {
   maxRetryTimeInSecs: 5,
