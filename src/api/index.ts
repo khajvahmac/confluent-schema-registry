@@ -7,6 +7,7 @@ import { DEFAULT_API_CLIENT_ID } from '../constants'
 import errorMiddleware from './middleware/errorMiddleware'
 import confluentEncoder from './middleware/confluentEncoderMiddleware'
 import userAgentMiddleware from './middleware/userAgent'
+import additionalHeaderMiddleware from 'api/middleware/additionalHeader'
 
 const DEFAULT_RETRY = {
   maxRetryTimeInSecs: 5,
@@ -23,6 +24,7 @@ export interface SchemaRegistryAPIClientArgs {
   retry?: Partial<RetryMiddlewareOptions>
   /** HTTP Agent that will be passed to underlying API calls */
   agent?: Agent
+  headers?: { [key: string]: string }
 }
 
 // TODO: Improve typings
@@ -48,6 +50,7 @@ export default ({
   host,
   retry = {},
   agent,
+  headers = {},
 }: SchemaRegistryAPIClientArgs): SchemaRegistryAPIClient => {
   const clientId = userClientId || DEFAULT_API_CLIENT_ID
   // FIXME: ResourcesType typings is not exposed by mappersmith
@@ -61,6 +64,7 @@ export default ({
       RetryMiddleware(Object.assign(DEFAULT_RETRY, retry)),
       errorMiddleware,
       ...(auth ? [BasicAuthMiddleware(auth)] : []),
+      additionalHeaderMiddleware(headers),
     ],
     resources: {
       Schema: {
